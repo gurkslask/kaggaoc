@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advent of Code</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    {{ if .Authenticated }}
+    {{ .InputData }}
+    {{ else }}
+    Du är inte inloggad 
+    {{  end }}
+    </body>
+</html>

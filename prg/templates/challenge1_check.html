@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Min Programmeringshemsida</title>
+  <link rel="stylesheet" href="static/styles.css"> 
+</head>
+<body>
+  <header>
+    <h1>Min Programmeringshemsida</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="/" >Hem</a></li>
+      <li><a href="/login" >Login</a></li>
+      <li><a href="/register" >Register</a></li>
+      <li><a href="/challenge" class="active">Challenge</a></li>
+    </ul>
+    <div id="userInfo">
+    {{ if .Authenticated }}
+    Inloggad som {{ .Username }} 
+    {{ else }}
+    Du är inte inloggad
+    {{ end }}
+    </div>
+  </nav>
+  <main>
+    <h1> Utmaning 1 </h1>
+    <h2> Variabler </h2>
+            {{ if .Authenticated }}
+            Hej {{ .Username }}
+            Ditt svar är {{ .Answer }}
+            Det rätta svaret är {{ .Trueanswer }}
+            {{ else }}
+            Du är inte inloggad 
+            {{ end }}
+  </main>
+  <footer>
+    <p>Gjord av Alexander Svensson &bull; <a href="https://github.com/gurkslask">GitHub</a></p>
+  </footer>
+</body>
+</html>

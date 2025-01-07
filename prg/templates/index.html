@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Min Programmeringshemsida</title>
+  <link rel="stylesheet" href="static/styles.css"> 
+</head>
+<body>
+  <header>
+    <h1>Min Programmeringshemsida</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="/" class="active">Hem</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/challenge">Challenge</a></li>
+    </ul>
+    <div id="userInfo">
+    {{ if .Authenticated }}
+    Inloggad som {{ .Username }} 
+    {{ else }}
+    Du är inte inloggad
+    {{ end }}
+    </div>
+  </nav>
+
+  <main>
+    <p>Välkommen till min hemsida! Här kommer jag att dela med mig av mina kunskaper inom programmering.</p>
+    <div class="code-block">
+      // Exempel på kod
+      console.log("Hello, World!");
+    </div>
+    <h1> heVälkommen till Advent of Code!</h1>
+    {{ if .Authenticated }}
+    auth
+    <h1> {{ .Username }} </h1>
+    {{ else }}
+    Du är inte inloggad
+    <br>
+    Logga in <a href="/login">här</a>
+    <br>
+    Registrera dig <a href="/register">här</a>
+    {{ end }}
+  </main>
+
+  <footer>
+    <p>Gjord av Alexander Svensson &bull; <a href="https://github.com/gurkslask">GitHub</a></p>
+  </footer>
+</body>
+</html>
