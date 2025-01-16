@@ -14,7 +14,19 @@ type Problem struct {
 	Seed   int64
 }
 
-func (p Problem) checkAnswer(answer string) bool {
+func CreateProblem() *Problem {
+	return &Problem{}
+}
+func (p *Problem) GetInput() string {
+	return p.Input
+}
+func (p *Problem) GetAnswer() string {
+	return p.Answer
+}
+func (p *Problem) SetSeed(i int64) {
+	p.Seed = i
+}
+func (p *Problem) checkAnswer(answer string) bool {
 	if answer == p.Answer {
 		return true
 	} else {
@@ -49,6 +61,6 @@ func (p *Problem) GenerateInputAndAnswer() {
 
 	p.Answer = strconv.Itoa(ianswer)
 }
-func (p Problem) Print() string {
+func (p *Problem) Print() string {
 	return fmt.Sprintf("Seed: %v\nInput: %v\nAnswer: %v \n", p.Seed, p.Input, p.Answer)
 }

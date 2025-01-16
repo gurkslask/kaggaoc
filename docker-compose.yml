@@ -1,24 +1,35 @@
 version: '3.7'
 
 services:
-  app:
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: dev
+  my-project-with-air:
+    image: cosmtrek/air
+    # working_dir value has to be the same of mapped volume
+    working_dir: /prg
     volumes:
-      - .:/opt/app/api
+      - ./prg/:/prg/
+        # app:
+        # build:
+        # dockerfile: Dockerfile
+        # context: .
+        # target: dev
+        # volumes:
+        # # - .:/opt/app/api
     ports:
       - "8080:8080"
     depends_on:
       - db
     networks:
       - aoc
+    environment:
+      - SESSION_KEY=kaggjennyalex
   db:
     image: postgres:latest
     environment:
       POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_ADMIN: alex
       POSTGRES_DB: advent_of_code
+    ports:
+      - "5432:5432"
     networks:
       - aoc
 

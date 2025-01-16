@@ -28,8 +28,26 @@
     <h2> Variabler </h2>
             {{ if .Authenticated }}
             Hej {{ .Username }}
-            <a href="/challenge_input">input</a>
-            <form action="/challenge_check" method="POST">
+            <br>
+            I den här uppgiften ska vi jobba med siffror. Heltal inom programmering kallas för <i>int</i>, det är en förkortning av det engelska ordet <b>integer</b>. Inom programmering går det att göra mycket med <i>int</i> typen. Man kan addera, subtrahera, multiplicera och dividera. Man kan också jämföra två <i>int</i> med varandra. 
+            <br>
+            I den här övningen ska vi summera olika tal med varandra och svaret på uppgiften är den summan av alla tal.
+            <br>
+            Exempel:
+            <br>
+            <br>
+            <code>
+                11 12 13 14 15
+            </code>
+            <br>
+            Om man lägger ihop de här talen blir summen 65. 
+            <br> 
+            <br>
+            Ni kommer få många fler tal som ni ska summera. Talen hittar ni i uppgiften, <b>Lycka till!</b>
+            <br>
+            <br>
+            <a href="/challenge_input?challenge={{ .Challenge }}">Era tal</a>
+            <form action="/challenge_check?challenge={{ .Challenge }}" method="POST">
                 <label for="answer">Svar:</label>
                 <input type="text" id="answer" name="answer" required>
                 <br>
