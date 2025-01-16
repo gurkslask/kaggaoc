@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Min Programmeringshemsida</title>
+  <link rel="stylesheet" href="static/styles.css"> 
+</head>
+<body>
+  <header>
+    <h1>Min Programmeringshemsida</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="/" >Hem</a></li>
+      <li><a href="/login" >Login</a></li>
+      <li><a href="/register" >Register</a></li>
+      <li><a href="/challenge" class="active">Challenge</a></li>
+    </ul>
+    <div id="userInfo">
+    {{ if .Authenticated }}
+    Inloggad som {{ .Username }} 
+    {{ else }}
+    Du är inte inloggad
+    {{ end }}
+    </div>
+  </nav>
+  <main>
+    <h1> Utmaning 1 </h1>
+    <h2> Variabler </h2>
+            {{ if .Authenticated }}
+            Hej {{ .Username }}
+            <br>
+            I den här uppgiften ska vi jobba med siffror. Heltal inom programmering kallas för <i>int</i>, det är en förkortning av det engelska ordet <b>integer</b>. Inom programmering går det att göra mycket med <i>int</i> typen. Man kan addera, subtrahera, multiplicera och dividera. Man kan också jämföra två <i>int</i> med varandra. 
+            <br>
+            I den här övningen ska vi summera olika tal med varandra och svaret på uppgiften är den summan av alla tal.
+            <br>
+            Exempel:
+            <br>
+            <br>
+            <code>
+                11 12 13 14 15
+            </code>
+            <br>
+            Om man lägger ihop de här talen blir summen 65. 
+            <br> 
+            <br>
+            Ni kommer få många fler tal som ni ska summera. Talen hittar ni i uppgiften, <b>Lycka till!</b>
+            <br>
+            <br>
+            <a href="/challenge_input?challenge={{ .Challenge }}">Era tal</a>
+            <form action="/challenge_check?challenge={{ .Challenge }}" method="POST">
+                <label for="answer">Svar:</label>
+                <input type="text" id="answer" name="answer" required>
+                <br>
+                <button type="submit">Färdig</button>
+            </form>
+            {{ else }}
+            Du är inte inloggad 
+            {{ end }}
+  </main>
+  <footer>
+    <p>Gjord av Alexander Svensson &bull; <a href="https://github.com/gurkslask">GitHub</a></p>
+  </footer>
+</body>
+</html>

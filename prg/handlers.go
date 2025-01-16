@@ -70,7 +70,7 @@ func inputChallengeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Illegal challenge", http.StatusInternalServerError)
 	}
 	//t, err := template.ParseFS(templateFS, "templates/challenge1_input.html")
-	templateURL := fmt.Sprintf("templates/challenge%v_input.html", c)
+	templateURL := fmt.Sprintf("templates/challenge1_input.html")
 	t, err := template.ParseFS(templateFS, templateURL)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -81,7 +81,11 @@ func inputChallengeHandler(w http.ResponseWriter, r *http.Request) {
 	auth, _ := session.Values["authenticated"].(bool)
 	username, _ := session.Values["user_name"].(string)
 
-	p := GetProblem(ci)
+	p, err := GetProblem(ci)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	p.SetSeed(session.Values["seed"].(int64))
 	p.GenerateInputAndAnswer()
 
@@ -119,7 +123,11 @@ func answerChallengeHandler(w http.ResponseWriter, r *http.Request) {
 		auth, _ := session.Values["authenticated"].(bool)
 		username, _ := session.Values["user_name"].(string)
 
-		p := GetProblem(ci)
+		p, err := GetProblem(ci)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		p.SetSeed(session.Values["seed"].(int64))
 		p.GenerateInputAndAnswer()
 		fmt.Sprintf("Check answer, your answer is: %v, true answer: %v\n", answer, p.GetAnswer())
