@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 )
@@ -13,16 +14,45 @@ type Problems interface {
 	GetInput() string
 	GetAnswer() string
 }
+type ProblemStruct struct {
+	pProblems map[int]Problems
+}
 
-func GetProblem(p int) (Problems, error) {
+func CreateProblemStruct() ProblemStruct {
+	return ProblemStruct{pProblems: map[int]Problems{
+		1: CreateProblem(),
+		2: CreateProblem2(),
+		3: CreateProblem3()},
+	}
+
+}
+
+func (p ProblemStruct) GetProblem(pi int) (Problems, error) {
+	if P, ok := p.pProblems[pi]; ok {
+		return P, nil
+	} else {
+		return nil, errors.New(fmt.Sprintf("Challenge %v does not exist", p))
+	}
+}
+func (p ProblemStruct) GetProblems() string {
+	var buffer bytes.Buffer
+	for k, v := range p.pProblems {
+		buffer.WriteString(fmt.Sprintf("%v: %v\n\r<br>", k, v.Print()))
+	}
+	return buffer.String()
+
+}
+
+/*func GetProblem(p int) (Problems, error) {
 	// Get problem, if new problem add to map
 	mm := map[int]Problems{
 		1: CreateProblem(),
 		2: CreateProblem2(),
+		3: CreateProblem3(),
 	}
 	if P, ok := mm[p]; ok {
 		return P, nil
 	} else {
 		return nil, errors.New(fmt.Sprintf("Challenge %v does not exist", p))
 	}
-}
+}*/

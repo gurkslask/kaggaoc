@@ -56,7 +56,7 @@ func (p *Problem2) GenerateInputAndAnswer() {
 		if err != nil {
 			fmt.Println("Wrong conv")
 		}
-		if ianswer%2 == 0 {
+		if i%2 == 0 {
 			ianswer += i
 		}
 	}
@@ -64,5 +64,5 @@ func (p *Problem2) GenerateInputAndAnswer() {
 	p.Answer = strconv.Itoa(ianswer)
 }
 func (p *Problem2) Print() string {
-	return fmt.Sprintf("Seed: %v\nInput: %v\nAnswer: %v \n", p.Seed, p.Input, p.Answer)
+	return fmt.Sprintf("Problem2: IF sats")
 }

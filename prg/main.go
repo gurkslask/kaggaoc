@@ -20,7 +20,10 @@ var db *sql.DB
 
 var username string
 
+var gProblems ProblemStruct
+
 func main() {
+	gProblems = CreateProblemStruct()
 	fs := http.FileServer(http.Dir("assets/"))
 	username = ""
 	var err error
@@ -37,6 +40,7 @@ func main() {
 	http.HandleFunc("/challenge", challengeHandler)
 	http.HandleFunc("/challenge_input", inputChallengeHandler)
 	http.HandleFunc("/challenge_check", answerChallengeHandler)
+	http.HandleFunc("/challenges", challengesHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

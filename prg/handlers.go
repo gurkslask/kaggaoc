@@ -81,7 +81,7 @@ func inputChallengeHandler(w http.ResponseWriter, r *http.Request) {
 	auth, _ := session.Values["authenticated"].(bool)
 	username, _ := session.Values["user_name"].(string)
 
-	p, err := GetProblem(ci)
+	p, err := gProblems.GetProblem(ci)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -123,7 +123,7 @@ func answerChallengeHandler(w http.ResponseWriter, r *http.Request) {
 		auth, _ := session.Values["authenticated"].(bool)
 		username, _ := session.Values["user_name"].(string)
 
-		p, err := GetProblem(ci)
+		p, err := gProblems.GetProblem(ci)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -143,5 +143,35 @@ func answerChallengeHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+	}
+}
+func challengesHandler(w http.ResponseWriter, r *http.Request) {
+	// Get which challenge
+	q := r.URL.Query()
+	c := q.Get("challenge")
+	var err error
+	templateURL := fmt.Sprintf("templates/challenges.html")
+	fmt.Println(templateURL)
+	t, err := template.ParseFS(templateFS, templateURL)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		//http.Error(w, fmt.Sprintf("Challenge %v does not exist", c), http.StatusInternalServerError)
+		return
+	}
+	// SessionData
+	session, _ := Store.Get(r, "your-session-name")
+	auth, _ := session.Values["authenticated"].(bool)
+	username, _ := session.Values["user_name"].(string)
+
+	data := struct {
+		Authenticated bool
+		Username      string
+		Challenge     string
+		Challenges    string
+	}{auth, username, c, gProblems.GetProblems()}
+	// Execute page
+	err = t.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

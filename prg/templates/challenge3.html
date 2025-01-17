@@ -31,18 +31,52 @@
             <br>
             I den här uppgiften ska vi fortsätta jobba med siffror, <b>men</b> den här gången ska vi också jämföra siffror. Den här gången ska vi bara summera siffrorna om de är <b>jämna</b>. Detta betyder att vi måste lägga till en <i>if</i> instruktion innan vi lägger ihop siffrorna.<br>
             Det enklaste sättet att kolla om siffror är jämna är att kolla att <i>resten</i> efter en division med 2 är lika med 0. <i>Resten</i> inom programmering har tecknet <b>%</b>, så använd det i eran <i>if</i>-sats.
+            I den här uppgiften ska vi fördjupa era kunskaper kring hur for-loopen fungerar. Ni ska nu jämföra de olika talen med varandra.
+            <br>
+            Börja med det första talet, detta ska vi nu jämföra med talet innan. Eftersom det inte finns något tal innan så får vi jämföra det med <i>0</i>. Om talet som vi står på nu är större än det som var innan, så ska vi lägga till det till vårt resultat.
             <br>
             <br>
-            I den här övningen ska vi summera olika tal med varandra och svaret på uppgiften är den summan av alla tal som är <b>jämna</b>.
             <br>
-            Exempel:
+            Ta detta exemplet:
             <br>
             <br>
             <code>
-                11 12 13 14 15
+                1 20 5 99 99
             </code>
+            <br> 
+            Nu ska vi gå igenom exemplet steg för steg<br>
+            > 1 <br>
+            20 <br>
+            5 <br>
+            99 <br>
+            99 <br>
+            Vi står nu på 1, detta är första talet och är större än 0. Alltså är resultatet än så länge 1<br><br>
+            1 <br>
+            > 20 <br>
+            5 <br>
+            99 <br>
+            99 <br>
+            Vi står nu på 20, 20 är större än 1. Resultatet är nu 20 + 1 = 21<br><br>
+            1 <br>
+            20 <br>
+            > 5 <br>
+            99 <br>
+            99 <br>
+            Vi står nu på 5, 5 är <b>inte</b> större än 20. Alltså lägger vi inte till 5<br><br>
+            1 <br>
+            20 <br>
+            5 <br>
+            > 99 <br>
+            99 <br>
+            Vi står nu på 99, som är större än 5, vi lägger till 99 -> 21 + 99 = 120<br><br>
+            1 <br>
+            20 <br>
+            5 <br>
+            99 <br>
+            > 99 <br>
+            Vi står nu på 99, som är lika stor som 99, vi lägger till 99 -> 120 + 99 = 279<br><br>
             <br>
-            I det här exemplet är det bara 12 och 14 som är jämna, alltså: 12 + 14 = 26
+            I detta exempel blir resultatet <b>279</b>
             <br> 
             <br>
             <b>Tänk på att ni har andra siffror som ni ska jämföra i den här uppgiften</b>
