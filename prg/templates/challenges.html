@@ -43,7 +43,11 @@
     Registrera dig <a href="/register">här</a>
     {{ end }}
     <h1> Challenges </h1>
-    {{ .Challenges }}
+    {{ range .Challenges }}
+    {{ if .Completed }} <s> {{ end }}
+    <a href="/challenge?challenge={{ .Num }}"> {{ .Num }}  {{ .Desc }} {{ .Completed }} </a><br>
+    {{ if .Completed }} </s> {{ end }}
+    {{ end }}
   </main>
 
   <footer>

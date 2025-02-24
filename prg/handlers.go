@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 
 	_ "github.com/lib/pq"
 )
@@ -131,6 +132,14 @@ func answerChallengeHandler(w http.ResponseWriter, r *http.Request) {
 		p.SetSeed(session.Values["seed"].(int64))
 		p.GenerateInputAndAnswer()
 		fmt.Sprintf("Check answer, your answer is: %v, true answer: %v\n", answer, p.GetAnswer())
+		if answer == p.GetAnswer() {
+			err = createChallengeDone(db, username, ci)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+		}
 
 		data := struct {
 			Authenticated bool
@@ -162,13 +171,26 @@ func challengesHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := Store.Get(r, "your-session-name")
 	auth, _ := session.Values["authenticated"].(bool)
 	username, _ := session.Values["user_name"].(string)
-
+	// Make challenge map
+	type s struct {
+		Num       int
+		Desc      string
+		Completed bool
+	}
+	problemSlice := strings.Split(gProblems.GetProblems(), "\n")
+	_, completedChallenges := getCompletedChallenges(db, username)
+	ss := []s{}
+	// Remove the last one
+	for n, prob := range problemSlice[:len(problemSlice)-1] {
+		st := s{n + 1, prob, ContainsInt(completedChallenges, n)}
+		ss = append(ss, st)
+	}
 	data := struct {
 		Authenticated bool
 		Username      string
 		Challenge     string
-		Challenges    string
-	}{auth, username, c, gProblems.GetProblems()}
+		Challenges    []s
+	}{auth, username, c, ss}
 	// Execute page
 	err = t.Execute(w, data)
 	if err != nil {

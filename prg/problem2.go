@@ -64,5 +64,5 @@ func (p *Problem2) GenerateInputAndAnswer() {
 	p.Answer = strconv.Itoa(ianswer)
 }
 func (p *Problem2) Print() string {
-	return fmt.Sprintf("Problem2: IF sats")
+	return fmt.Sprintf("Problem 2: IF sats")
 }

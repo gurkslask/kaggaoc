@@ -31,3 +31,39 @@ func createUser(db *sql.DB, username, password, email string) error {
 
 	return nil
 }
+func createChallengeDone(db *sql.DB, username string, challenge int) error {
+	var userID int
+	err := db.QueryRow("SELECT user_id FROM users WHERE username = $1", username).Scan(&userID)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("INSERT INTO completed (challenge, user_id) VALUES ($1, $2)", challenge, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+func getCompletedChallenges(db *sql.DB, username string) (error, []int) {
+	var userID int
+	err := db.QueryRow("SELECT user_id FROM users WHERE username = $1", username).Scan(&userID)
+	if err != nil {
+		return err, nil
+	}
+	rows, err := db.Query("SELECT challenge FROM completed WHERE user_id = $1", userID)
+	if err != nil {
+		return err, nil
+	}
+	defer rows.Close()
+	var completed []int
+	for rows.Next() {
+		var comp int
+		if err := rows.Scan(&comp); err != nil {
+			return err, nil
+		}
+		completed = append(completed, comp)
+	}
+	return nil, completed
+
+}

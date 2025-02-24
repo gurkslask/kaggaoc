@@ -37,7 +37,7 @@ func (p ProblemStruct) GetProblem(pi int) (Problems, error) {
 func (p ProblemStruct) GetProblems() string {
 	var buffer bytes.Buffer
 	for k, v := range p.pProblems {
-		buffer.WriteString(fmt.Sprintf("%v: %v\n\r<br>", k, v.Print()))
+		buffer.WriteString(fmt.Sprintf("%v: %v\n", k, v.Print()))
 	}
 	return buffer.String()
 

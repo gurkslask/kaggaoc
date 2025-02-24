@@ -72,7 +72,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var user_id int
-		err = db.QueryRow("SELECT id FROM users WHERE username = $1", username).Scan(&user_id)
+		err = db.QueryRow("SELECT user_id FROM users WHERE username = $1", username).Scan(&user_id)
 		if err != nil {
 			// Hantera fel, användaren hittades inte eller annat fel
 			return
