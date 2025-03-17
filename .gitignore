@@ -28,4 +28,4 @@ go.work.sum
 ./tmp/*
 
 # Generated sqlc code
-prg/sqlc/kaggaoc/*
+./prg/sqlc/kaggaoc/*.go
