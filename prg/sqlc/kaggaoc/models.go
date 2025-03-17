@@ -5,12 +5,12 @@
 package kaggaoc
 
 import (
-	"database/sql"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Completed struct {
 	CompleteID int32
-	UserID     sql.NullInt32
+	UserID     pgtype.Int4
 	Challenge  int32
 }
 

@@ -7,7 +7,8 @@ package kaggaoc
 
 import (
 	"context"
-	"database/sql"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createChallenge = `-- name: CreateChallenge :one
@@ -21,11 +22,11 @@ RETURNING complete_id, user_id, challenge
 
 type CreateChallengeParams struct {
 	Challenge int32
-	UserID    sql.NullInt32
+	UserID    pgtype.Int4
 }
 
 func (q *Queries) CreateChallenge(ctx context.Context, arg CreateChallengeParams) (Completed, error) {
-	row := q.db.QueryRowContext(ctx, createChallenge, arg.Challenge, arg.UserID)
+	row := q.db.QueryRow(ctx, createChallenge, arg.Challenge, arg.UserID)
 	var i Completed
 	err := row.Scan(&i.CompleteID, &i.UserID, &i.Challenge)
 	return i, err
@@ -48,7 +49,7 @@ type CreateUserParams struct {
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser,
+	row := q.db.QueryRow(ctx, createUser,
 		arg.Username,
 		arg.PasswordHash,
 		arg.Email,
@@ -71,7 +72,7 @@ WHERE user_id = $1
 `
 
 func (q *Queries) DeleteUser(ctx context.Context, userID int32) error {
-	_, err := q.db.ExecContext(ctx, deleteUser, userID)
+	_, err := q.db.Exec(ctx, deleteUser, userID)
 	return err
 }
 
@@ -80,8 +81,8 @@ SELECT challenge FROM completed
 WHERE user_id = $1
 `
 
-func (q *Queries) GetChallengeCompleted(ctx context.Context, userID sql.NullInt32) ([]int32, error) {
-	rows, err := q.db.QueryContext(ctx, getChallengeCompleted, userID)
+func (q *Queries) GetChallengeCompleted(ctx context.Context, userID pgtype.Int4) ([]int32, error) {
+	rows, err := q.db.Query(ctx, getChallengeCompleted, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -93,9 +94,6 @@ func (q *Queries) GetChallengeCompleted(ctx context.Context, userID sql.NullInt3
 			return nil, err
 		}
 		items = append(items, challenge)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -109,7 +107,7 @@ WHERE user_id = $1 LIMIT 1
 `
 
 func (q *Queries) GetUser(ctx context.Context, userID int32) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUser, userID)
+	row := q.db.QueryRow(ctx, getUser, userID)
 	var i User
 	err := row.Scan(
 		&i.UserID,
@@ -127,7 +125,7 @@ WHERE username = $1 LIMIT 1
 `
 
 func (q *Queries) GetUserId(ctx context.Context, username string) (int32, error) {
-	row := q.db.QueryRowContext(ctx, getUserId, username)
+	row := q.db.QueryRow(ctx, getUserId, username)
 	var user_id int32
 	err := row.Scan(&user_id)
 	return user_id, err
@@ -139,7 +137,7 @@ ORDER BY username
 `
 
 func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.QueryContext(ctx, listUsers)
+	rows, err := q.db.Query(ctx, listUsers)
 	if err != nil {
 		return nil, err
 	}
@@ -157,9 +155,6 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -181,6 +176,6 @@ type UpdateUserParams struct {
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.ExecContext(ctx, updateUser, arg.UserID, arg.Username, arg.Email)
+	_, err := q.db.Exec(ctx, updateUser, arg.UserID, arg.Username, arg.Email)
 	return err
 }
