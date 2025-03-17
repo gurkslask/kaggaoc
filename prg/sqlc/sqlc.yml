@@ -7,4 +7,4 @@ sql:
       go:
         package: "kaggaoc"
         out: "kaggaoc"
-        sql_package: "database/sql"
+        sql_package: "pgx/v5"

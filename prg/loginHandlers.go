@@ -2,10 +2,13 @@ package main
 
 import (
 	"html/template"
+	"math/rand"
 	"net/http"
+	"strconv"
 
 	"fmt"
 
+	"github.com/gurkslask/kaggaoc/sqlc/kaggaoc"
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,11 +22,20 @@ func registerPageHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 		email := r.FormValue("email")
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		// Validera data (t.ex. kontrollera längd, format, etc.)
 
 		// Skapa användaren i databasen (använd createUser-funktionen från tidigare)
-		err := createUser(db, username, password, email)
+		_, err = queries.CreateUser(ctx, kaggaoc.CreateUserParams{
+			Username:     username,
+			PasswordHash: string(hashedPassword[:]),
+			Email:        email,
+			Seed:         strconv.FormatInt(rand.Int63(), 10)})
+		// err := createUser(db, username, password, email)
 		fmt.Println(err)
 		if err != nil {
 			// Hantera fel, t.ex. visa ett felmeddelande
@@ -63,35 +75,33 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		username := r.FormValue("username")
 		password := r.FormValue("password")
+		var user kaggaoc.User
+		var err error
 
-		// Sök efter användaren i databasen
-		var hashedPassword string
-		err := db.QueryRow("SELECT password_hash FROM users WHERE username = $1", username).Scan(&hashedPassword)
+		userId, err := queries.GetUserId(ctx, username)
 		if err != nil {
-			// Hantera fel, användaren hittades inte eller annat fel
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		var user_id int
-		err = db.QueryRow("SELECT user_id FROM users WHERE username = $1", username).Scan(&user_id)
+
+		user, err = queries.GetUser(ctx, userId)
 		if err != nil {
-			// Hantera fel, användaren hittades inte eller annat fel
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		var seed int64
-		err = db.QueryRow("SELECT seed FROM users WHERE username = $1", username).Scan(&seed)
-		if err != nil {
-			// Hantera fel, användaren hittades inte eller annat fel
-			return
-		}
+		username = user.Username
+		hashedPassword := user.PasswordHash
+		seed, _ := strToInt64(user.Seed)
 
 		// Jämför det inmatade lösenordet med det hashade lösenordet
 		err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 		if err != nil {
 			// Felaktigt lösenord
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 		session, _ := Store.Get(r, "your-session-name")
-		session.Values["user_id"] = user_id
+		session.Values["user_id"] = userId
 		session.Values["user_name"] = username
 		session.Values["authenticated"] = true
 		session.Values["seed"] = seed

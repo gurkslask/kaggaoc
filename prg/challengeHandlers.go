@@ -109,10 +109,14 @@ func answerChallengeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		p.SetSeed(session.Values["seed"].(int64))
 		p.GenerateInputAndAnswer()
+		var sUserID string
 		fmt.Sprintf("Check answer, your answer is: %v, true answer: %v\n", answer, p.GetAnswer())
 		if answer == p.GetAnswer() {
 			userID, err := queries.GetUserId(ctx, username)
+			sUserID = strconv.Itoa(int(userID))
 			puserID := int32ToInt4(userID)
+			fmt.Printf("username %v, userID: %v", username, userID)
+			l.Printf("username %v, userID: %v, u4 %v", username, userID, puserID.Int32)
 			_, err = queries.CreateChallenge(ctx, kaggaoc.CreateChallengeParams{
 				Challenge: int32(ci),
 				UserID:    puserID})
@@ -130,7 +134,8 @@ func answerChallengeHandler(w http.ResponseWriter, r *http.Request) {
 			Trueanswer    string
 			Answer        string
 			Challenge     string
-		}{auth, username, p.GetAnswer(), answer, c}
+			UserID        string
+		}{auth, username, p.GetAnswer(), answer, c, sUserID}
 		err = t.Execute(w, data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

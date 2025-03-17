@@ -42,17 +42,3 @@ func (p ProblemStruct) GetProblems() string {
 	return buffer.String()
 
 }
-
-/*func GetProblem(p int) (Problems, error) {
-	// Get problem, if new problem add to map
-	mm := map[int]Problems{
-		1: CreateProblem(),
-		2: CreateProblem2(),
-		3: CreateProblem3(),
-	}
-	if P, ok := mm[p]; ok {
-		return P, nil
-	} else {
-		return nil, errors.New(fmt.Sprintf("Challenge %v does not exist", p))
-	}
-}*/

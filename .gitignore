@@ -26,3 +26,6 @@ go.work.sum
 
 # temp folder
 ./tmp/*
+
+# Generated sqlc code
+prg/sqlc/kaggaoc/*

@@ -14,7 +14,7 @@
       <li><a href="/" >Hem</a></li>
       <li><a href="/login" >Login</a></li>
       <li><a href="/register" >Register</a></li>
-      <li><a href="/challenge" class="active">Challenge</a></li>
+      <li><a href="/challenges" class="active">Challenge</a></li>
     </ul>
     <div id="userInfo">
     {{ if .Authenticated }}
@@ -28,7 +28,7 @@
     <h1> Utmaning 1 </h1>
     <h2> Variabler </h2>
             {{ if .Authenticated }}
-            Hej {{ .Username }}
+            Hej {{ .Username }} {{ .UserID }}
             Ditt svar är {{ .Answer }}
             Det rätta svaret är {{ .Trueanswer }}
             {{ else }}
